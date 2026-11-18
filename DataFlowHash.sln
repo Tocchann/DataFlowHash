@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.12.12412.261 stable
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataflowDuplicateDetector", "DataflowDuplicateDetector\DataflowDuplicateDetector.csproj", "{09E5DFDF-708C-4718-BD09-E943A607DFAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataflowDuplicateDetector.Tests", "DataflowDuplicateDetector.Tests\DataflowDuplicateDetector.Tests.csproj", "{F389F672-F5E1-4D9C-AB6C-13C3FC5C918D}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09E5DFDF-708C-4718-BD09-E943A607DFAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09E5DFDF-708C-4718-BD09-E943A607DFAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09E5DFDF-708C-4718-BD09-E943A607DFAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09E5DFDF-708C-4718-BD09-E943A607DFAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F389F672-F5E1-4D9C-AB6C-13C3FC5C918D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F389F672-F5E1-4D9C-AB6C-13C3FC5C918D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F389F672-F5E1-4D9C-AB6C-13C3FC5C918D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F389F672-F5E1-4D9C-AB6C-13C3FC5C918D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
