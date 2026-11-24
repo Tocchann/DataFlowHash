@@ -16,7 +16,8 @@ internal sealed partial class MainViewModel : ObservableObject
     private IReadOnlyList<DuplicateGroup> _results = [];
     private bool _canExport;
 
-    public MainViewModel(Window owner)
+    public MainViewModel() : this( Application.Current.MainWindow ) { }
+	public MainViewModel(Window owner)
     {
         _owner = owner;
         selectedMode = Modes[3];

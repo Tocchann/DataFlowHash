@@ -1,88 +1,125 @@
 <Window x:Class="DataflowDuplicateDetector.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:DataflowDuplicateDetector.ViewModels"
+        mc:Ignorable="d"
         Title="Dataflow 重複ファイル検出" Width="1100" Height="790" MinWidth="760" MinHeight="660"
         WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <Style x:Key="MetricValue" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="19" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Margin" Value="0,3,10,9" />
-        </Style>
-        <Style x:Key="SectionTitle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Margin" Value="0,0,0,6" />
-        </Style>
-    </Window.Resources>
-    <DockPanel Margin="24,16">
-        <StackPanel DockPanel.Dock="Top">
-            <TextBlock Text="重複ファイル検出" FontSize="26" FontWeight="SemiBold" />
-            <TextBlock Margin="0,4,0,14" Text="同じフォルダーで処理方式とバックプレッシャーを比較" />
-            <TextBlock Text="走査するフォルダー" Style="{StaticResource SectionTitle}" />
-            <DockPanel Margin="0,0,0,12">
-                <Button DockPanel.Dock="Right" Content="参照…" Command="{Binding BrowseCommand}" Margin="8,0,0,0" />
-                <TextBox Text="{Binding Folder, UpdateSourceTrigger=PropertyChanged}"
+  <d:Window.DataContext>
+    <vm:MainViewModel />
+  </d:Window.DataContext>
+  <Window.Resources>
+    <Style x:Key="MetricValue" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="19" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Margin" Value="0,3,10,9" />
+    </Style>
+    <Style x:Key="SectionTitle" TargetType="TextBlock">
+      <Setter Property="FontSize" Value="16" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Margin" Value="0,0,0,6" />
+    </Style>
+  </Window.Resources>
+  <DockPanel Margin="24,16">
+    <StackPanel DockPanel.Dock="Top">
+      <TextBlock Text="重複ファイル検出" FontSize="26" FontWeight="SemiBold" />
+      <TextBlock Margin="0,4,0,14" Text="同じフォルダーで処理方式とバックプレッシャーを比較" />
+      <TextBlock Text="走査するフォルダー" Style="{StaticResource SectionTitle}" />
+      <DockPanel Margin="0,0,0,12">
+        <Button DockPanel.Dock="Right" Content="参照…" Command="{Binding BrowseCommand}" Margin="8,0,0,0" />
+        <TextBox Text="{Binding Folder, UpdateSourceTrigger=PropertyChanged}"
                          AutomationProperties.Name="走査するフォルダー" IsEnabled="{Binding CanConfigure}" />
-            </DockPanel>
-            <WrapPanel>
-                <StackPanel Margin="0,0,16,6">
-                    <TextBlock Text="実行モード" />
-                    <ComboBox ItemsSource="{Binding Modes}" SelectedItem="{Binding SelectedMode}"
+      </DockPanel>
+      <WrapPanel>
+        <StackPanel Margin="0,0,16,6">
+          <TextBlock Text="実行モード" />
+          <ComboBox ItemsSource="{Binding Modes}" SelectedItem="{Binding SelectedMode}"
                               DisplayMemberPath="Label" IsEnabled="{Binding CanConfigure}" Width="252"
                               AutomationProperties.Name="実行モード" />
-                </StackPanel>
-                <StackPanel Margin="0,0,16,6">
-                    <TextBlock Text="並列度" />
-                    <TextBox Text="{Binding Degree, UpdateSourceTrigger=PropertyChanged}" Width="80"
-                             IsEnabled="{Binding CanSetDegree}" AutomationProperties.Name="並列度" />
-                </StackPanel>
-                <StackPanel Margin="0,0,16,6">
-                    <TextBlock Text="ブロック容量" />
-                    <TextBox Text="{Binding Capacity, UpdateSourceTrigger=PropertyChanged}" Width="88"
-                             IsEnabled="{Binding CanSetCapacity}" AutomationProperties.Name="ブロック容量" />
-                </StackPanel>
-                <Button Content="開始" Command="{Binding StartCommand}" VerticalAlignment="Bottom" Margin="0,0,8,6" />
-                <Button Content="停止" Command="{Binding StartCancelCommand}" VerticalAlignment="Bottom" Margin="0,0,8,6" />
-                <Button Content="CSV 保存…" Command="{Binding ExportCommand}" VerticalAlignment="Bottom" Margin="0,0,0,6" />
-            </WrapPanel>
-            <TextBlock Text="{Binding SelectedMode.Description}" TextWrapping="Wrap" Margin="0,0,0,12" />
-            <TextBlock Text="ライブ指標" Style="{StaticResource SectionTitle}" />
-            <UniformGrid Columns="5" DataContext="{Binding Statistics}">
-                <StackPanel><TextBlock Text="検出数" /><TextBlock Text="{Binding FilesFound}" Style="{StaticResource MetricValue}" /></StackPanel>
-                <StackPanel><TextBlock Text="フルハッシュ数" /><TextBlock Text="{Binding FilesHashed}" Style="{StaticResource MetricValue}" /></StackPanel>
-                <StackPanel><TextBlock Text="重複グループ" /><TextBlock Text="{Binding DuplicateGroups}" Style="{StaticResource MetricValue}" /></StackPanel>
-                <StackPanel><TextBlock Text="入口キュー長" /><TextBlock Text="{Binding QueueLength}" Style="{StaticResource MetricValue}" /></StackPanel>
-                <StackPanel><TextBlock Text="送信待ち（累計）" /><TextBlock Text="{Binding Backpressure}" Style="{StaticResource MetricValue}" TextWrapping="Wrap" /></StackPanel>
-                <StackPanel><TextBlock Text="処理速度" /><TextBlock Text="{Binding Throughput}" Style="{StaticResource MetricValue}" /></StackPanel>
-                <StackPanel><TextBlock Text="プロセス CPU" /><TextBlock Text="{Binding CpuUsage}" Style="{StaticResource MetricValue}" /></StackPanel>
-                <StackPanel><TextBlock Text="ワーキングセット" /><TextBlock Text="{Binding MemoryUsage}" Style="{StaticResource MetricValue}" /></StackPanel>
-                <StackPanel><TextBlock Text="経過" /><TextBlock Text="{Binding Elapsed}" Style="{StaticResource MetricValue}" /></StackPanel>
-                <StackPanel><TextBlock Text="スキップ（ファイル / フォルダー）" TextWrapping="Wrap" /><TextBlock Text="{Binding Skipped}" Style="{StaticResource MetricValue}" /></StackPanel>
-            </UniformGrid>
         </StackPanel>
-        <TextBlock DockPanel.Dock="Bottom" Text="{Binding Status}" TextWrapping="Wrap" Margin="0,10,0,0" />
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="2*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <TextBlock Text="重複ファイル" Style="{StaticResource SectionTitle}" />
-            <DataGrid x:Name="ResultGrid" Grid.Row="1" ItemsSource="{Binding Groups}" AutoGenerateColumns="False"
+        <StackPanel Margin="0,0,16,6">
+          <TextBlock Text="並列度" />
+          <TextBox Text="{Binding Degree, UpdateSourceTrigger=PropertyChanged}" Width="80"
+                             IsEnabled="{Binding CanSetDegree}" AutomationProperties.Name="並列度" />
+        </StackPanel>
+        <StackPanel Margin="0,0,16,6">
+          <TextBlock Text="ブロック容量" />
+          <TextBox Text="{Binding Capacity, UpdateSourceTrigger=PropertyChanged}" Width="88"
+                             IsEnabled="{Binding CanSetCapacity}" AutomationProperties.Name="ブロック容量" />
+        </StackPanel>
+        <Button Content="開始" Command="{Binding StartCommand}" VerticalAlignment="Bottom" Margin="0,0,8,6" />
+        <Button Content="停止" Command="{Binding StartCancelCommand}" VerticalAlignment="Bottom" Margin="0,0,8,6" />
+        <Button Content="CSV 保存…" Command="{Binding ExportCommand}" VerticalAlignment="Bottom" Margin="0,0,0,6" />
+      </WrapPanel>
+      <TextBlock Text="{Binding SelectedMode.Description}" TextWrapping="Wrap" Margin="0,0,0,12" />
+      <TextBlock Text="ライブ指標" Style="{StaticResource SectionTitle}" />
+      <UniformGrid Columns="5" DataContext="{Binding Statistics}">
+        <StackPanel>
+          <TextBlock Text="検出数" />
+          <TextBlock Text="{Binding FilesFound}" Style="{StaticResource MetricValue}" />
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Text="フルハッシュ数" />
+          <TextBlock Text="{Binding FilesHashed}" Style="{StaticResource MetricValue}" />
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Text="重複グループ" />
+          <TextBlock Text="{Binding DuplicateGroups}" Style="{StaticResource MetricValue}" />
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Text="入口キュー長" />
+          <TextBlock Text="{Binding QueueLength}" Style="{StaticResource MetricValue}" />
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Text="送信待ち（累計）" />
+          <TextBlock Text="{Binding Backpressure}" Style="{StaticResource MetricValue}" TextWrapping="Wrap" />
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Text="処理速度" />
+          <TextBlock Text="{Binding Throughput}" Style="{StaticResource MetricValue}" />
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Text="プロセス CPU" />
+          <TextBlock Text="{Binding CpuUsage}" Style="{StaticResource MetricValue}" />
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Text="ワーキングセット" />
+          <TextBlock Text="{Binding MemoryUsage}" Style="{StaticResource MetricValue}" />
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Text="経過" />
+          <TextBlock Text="{Binding Elapsed}" Style="{StaticResource MetricValue}" />
+        </StackPanel>
+        <StackPanel>
+          <TextBlock Text="スキップ（ファイル / フォルダー）" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding Skipped}" Style="{StaticResource MetricValue}" />
+        </StackPanel>
+      </UniformGrid>
+    </StackPanel>
+    <TextBlock DockPanel.Dock="Bottom" Text="{Binding Status}" TextWrapping="Wrap" Margin="0,10,0,0" />
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="2*" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <TextBlock Text="重複ファイル" Style="{StaticResource SectionTitle}" />
+      <DataGrid x:Name="ResultGrid" Grid.Row="1" ItemsSource="{Binding Groups}" AutoGenerateColumns="False"
                       IsReadOnly="True" CanUserAddRows="False" SelectionMode="Single"
                       AutomationProperties.Name="重複グループ">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="SHA-256" Binding="{Binding Hash}" Width="2*" />
-                    <DataGridTextColumn Header="件数" Binding="{Binding Count}" Width="72" />
-                    <DataGridTextColumn Header="先頭ファイル" Binding="{Binding FirstFile}" Width="3*" />
-                </DataGrid.Columns>
-            </DataGrid>
-            <TextBlock Grid.Row="2" Margin="0,9,0,3" Text="選択グループ内のファイル" />
-            <ListBox Grid.Row="3" ItemsSource="{Binding SelectedItem.Files, ElementName=ResultGrid}"
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="SHA-256" Binding="{Binding Hash}" Width="2*" />
+          <DataGridTextColumn Header="件数" Binding="{Binding Count}" Width="72" />
+          <DataGridTextColumn Header="先頭ファイル" Binding="{Binding FirstFile}" Width="3*" />
+        </DataGrid.Columns>
+      </DataGrid>
+      <TextBlock Grid.Row="2" Margin="0,9,0,3" Text="選択グループ内のファイル" />
+      <ListBox Grid.Row="3" ItemsSource="{Binding SelectedItem.Files, ElementName=ResultGrid}"
                      DisplayMemberPath="Path" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                      AutomationProperties.Name="選択グループ内のファイル" />
-        </Grid>
-    </DockPanel>
+    </Grid>
+  </DockPanel>
 </Window>
